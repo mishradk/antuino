@@ -133,8 +133,15 @@ const int PROGMEM vswr[] = {
 10 
 };
 
+void printMode(char s[]){
+    lcd.setCursor(13, 0);
+    lcd.print(s);
+}
+
 void printLine1(char *c){
     lcd.setCursor(0, 0);
+    // Just to clear any  trailing garbage from last print
+    strcat(c, "        "); 
     lcd.print(c);
 }
 
@@ -142,7 +149,6 @@ void printLine2(char *c){
   lcd.setCursor(0, 1);
   lcd.print(c);
 }
-
 
 
 int enc_prev_state = 3;
@@ -251,13 +257,20 @@ void updateDisplay() {
     strncat(c, &b[4], 3);
   }
   if (mode == MODE_ANTENNA_ANALYZER)
-    strcat(c, "  ANT");
+  {
+    printLine1(c );
+    printMode("ANT");
+  }
   else if (mode == MODE_MEASUREMENT_RX)
-    strcat(c, "  MRX");
+  {
+    printLine1(c);
+    printMode("MRX");
+   }
   else if (mode == MODE_NETWORK_ANALYZER)
-    strcat(c, "  SNA");
-  printLine1(c);
-
+   {
+      printLine1(c);
+      printMode("SNA");
+   }
   if (mode == MODE_ANTENNA_ANALYZER){
     return_loss = openReading(frequency) - analogRead(DBM_READING)/5;
     if (return_loss > 30)
@@ -856,5 +869,3 @@ void loop() {
     prev = r;
   }
 }
-
-
